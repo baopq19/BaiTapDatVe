@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import datVeReducer from './DatVeReducer';
 
 const rootReducer = combineReducers({
-    stateDatVe: datVeReducer,
+    datVeReducer,
 })
 
 export default rootReducer;

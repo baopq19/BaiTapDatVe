@@ -1,6 +1,18 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
 
-export default class ThongTinDatGhe extends Component {
+class ThongTinDatGhe extends Component {
+
+    calculateTongTien = () => {
+        let tongTien = 0;
+        if(this.props.danhSachGheDangDat?.length > 0) {
+            this.props.danhSachGheDangDat.forEach(ghe => {
+                tongTien += ghe.gia;
+            }); 
+        }
+        return tongTien.toLocaleString();
+    }
+
     render() {
         return (
             <div className="thong-tin-dat-ghe">
@@ -28,7 +40,20 @@ export default class ThongTinDatGhe extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr></tr>
+                            {
+                                this.props.danhSachGheDangDat.map((gheDangDat, index) => {
+                                    return <tr key={index}>
+                                        <td>{gheDangDat.soGhe}</td>
+                                        <td>{gheDangDat.gia}</td>
+                                        <td><span onClick={() => {this.props.huyGhe(gheDangDat)}} style={{fontSize: 30, color: 'red', cursor: 'pointer'}}>X</span></td>
+                                    </tr>
+                                })
+                            }
+                            <tr>
+                                <th></th>
+                                <th>Tổng tiền</th>
+                                <th>{this.calculateTongTien()}</th>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -36,3 +61,22 @@ export default class ThongTinDatGhe extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        danhSachGheDangDat: state.datVeReducer.danhSachGheDangDat,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        huyGhe: (gheDangDat) => {
+            dispatch({
+                type: 'HUY_GHE',
+                gheDangDat
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (ThongTinDatGhe);
